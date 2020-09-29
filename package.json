@@ -1,0 +1,23 @@
+{
+  "name": "sports-academy-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "body-parser": "1.19.0",
+    "cors": "2.8.5",
+    "mongoose": "5.10.7",
+    "dotenv": "8.2.0",
+    "bcryptjs": "2.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.4"
+  }
+}
