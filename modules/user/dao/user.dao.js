@@ -1,6 +1,6 @@
-const User = require('./models/user.model');
-const Role = require('./models/role.model');
-const MasterData = require('./models/masterdata.model');
+const User = require('../models/user.model');
+const Role = require('../models/role.model');
+const MasterData = require('../models/masterdata.model');
 
 module.exports = {
     getUserBy,
