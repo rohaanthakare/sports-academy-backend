@@ -8,8 +8,9 @@ const RoleSchema = new mongoose.Schema({
     },
     name: String,
     description: String,
-    permissions: [{
-        type: mongoose.Schema.Types.ObjectId
+    features: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Feature'
     }]
 },{
     timestamps: {

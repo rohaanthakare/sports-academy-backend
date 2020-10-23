@@ -5,8 +5,22 @@ db.getCollection('roles').remove({});
 db.getCollection('users').remove({});
 
 // Insert superadmin user manually
+db.roles.insert({
+    "_id" : ObjectId("5f8d1d3bf293f81ebc526b5e"),
+    "permissions" : [],
+    "code" : "SUPERADMIN",
+    "name" : "Superadmin",
+    "description" : "Superadmin for Tracker",
+    "created_at" : ISODate("2020-10-19T04:59:39.361Z"),
+    "updated_at" : ISODate("2020-10-19T05:43:26.645Z"),
+    "__v" : 0
+});
+
 db.users.insert({
-    "roles" : ['superadmin'],
+    "roles" : [
+        ObjectId("5f8d1d3bf293f81ebc526b5e")
+    ],
+    "active_role" : ObjectId("5f8d1d3bf293f81ebc526b5e"),
     "username" : "superadmin",
     "password" : "$2a$10$xmVb9AYbFnzc/3AlaGpcUeU9X9FhsIQpyyU8iByzlkDC/fxTAM0g2",
     "mobileNo" : 9999999999.0,

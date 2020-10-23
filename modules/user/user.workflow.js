@@ -3,12 +3,16 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const UserDao = require('./dao/user.dao');
 const User = require('./models/user.model');
+const Role = require('./models/role.model');
 const MasterData = require('./models/masterdata.model');
+const RoleDao = require('./dao/role.dao');
+const FeatureDao = require('./dao/feature.dao');
 
 module.exports = {
     createNewUser,
     authenticateUser,
-    createMasterData
+    createMasterData,
+    updateRoleFeatureMapping
 }
 
 async function createNewUser(userParams) {
@@ -22,9 +26,13 @@ async function createNewUser(userParams) {
             throw('Mail ID is already registered, to retrive your password click on forgot password');
         }
         userParams.password = bcrypt.hashSync(userParams.password, 10);
-        user = await new User(userParams).save();
-        let role = await UserDao.getRoleBy('code', userParams.role);
+        let role = await RoleDao.getRoleByRoleCode(userParams.active_role);
+        userParams.roles = [];
+        userParams.roles.push(role._id);
+        userParams.active_role = role._id;
         let userStatus = await UserDao.getMasterDataByParentAndCode('USER_STATUS', userParams.status);
+        userParams.status = userStatus._id;
+        user = await new User(userParams).save();
         
         if (userParams.status === 'NEW') {
             console.log('send user activation mail');
@@ -59,10 +67,8 @@ async function authenticateUser(userParams) {
 async function getUserToken(userData) {
     try {
         let user_data = _.pick(userData, ['_id', 'username', 'active_role', 'email', 'mobile_no']);
-        
-        if (userData.active_role === 'superadmin') {
-
-        }
+        let role = await Role.findById(user_data.active_role);
+        user_data.active_role = role.code;
         let user_token = jwt.sign(user_data, process.env.TOKEN_SECRET, {
             algorithm : "HS256",
             expiresIn : 60*60*12
@@ -80,6 +86,21 @@ async function createMasterData(dataParams) {
     try {
         let master_data = await new MasterData(dataParams).save();
         return master_data; 
+    } catch (error) {
+        throw(error);
+    }
+}
+
+async function updateRoleFeatureMapping(roleMapParams) {
+    try {
+        let role = await RoleDao.getRoleByRoleCode(roleMapParams.roleCode);
+        let feature = await FeatureDao.getFeatureByCode(roleMapParams.featureCode);
+        role = await Role.findByIdAndUpdate(role._id, {
+           $addToSet: {
+               features: [feature._id]
+           } 
+        });
+        return role; 
     } catch (error) {
         throw(error);
     }
