@@ -3,10 +3,12 @@ const UserCtrl = require('./controllers/user.controller');
 const MasterDataCtrl = require('./controllers/masterdata.controller');
 const FeatureCtrl = require('./controllers/feature.controller');
 const RoleCtrl = require('./controllers/role.controller');
+const TrackerMailer = require('../global/trackermailer.service');
 
 const userRoutes = express.Router();
 userRoutes.post('/create_user', UserCtrl.createNewUser);
 userRoutes.post('/authenticate_user', UserCtrl.authenticateUser);
+userRoutes.post('/test_mail_template', TrackerMailer.testMailTemplate);
 
 userRoutes.post('/create_master_data', MasterDataCtrl.createMasterData);
 
